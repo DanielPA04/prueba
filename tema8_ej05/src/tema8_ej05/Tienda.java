@@ -247,11 +247,9 @@ public class Tienda {
 			rs2.close();
 			con.close();
 		} catch (SQLException e) {
-			System.err.println(e.getMessage());
-			System.out.println("---------------------------------------------");
-			e.getErrorCode();
-			System.out.println("---------------------------------------------");
-			e.printStackTrace();
+			JOptionPane.showMessageDialog(frmTienda, "Operacion fallida " + e.getMessage(), null,
+					JOptionPane.ERROR_MESSAGE);
+
 		}
 
 		JButton btnMostrar = new JButton("Mostrar");
@@ -302,7 +300,8 @@ public class Tienda {
 					rs2.close();
 					con.close();
 				} catch (SQLException e) {
-					e.printStackTrace();
+					JOptionPane.showMessageDialog(frmTienda, "Operacion fallida " + e.getMessage(), null,
+							JOptionPane.ERROR_MESSAGE);
 				}
 
 			}
@@ -319,8 +318,11 @@ public class Tienda {
 					int cod = Integer.valueOf(txtCodigo.getText());
 					String nombre = txtNombre.getText();
 					double precio = Double.valueOf(txtPrecio.getText());
-					;
 					int unidades = Integer.valueOf(txtUnidades.getText());
+
+					if (cod < 0 || precio < 0 || unidades < 0) {
+						throw new SQLException("Numeros negativos no validos");
+					}
 
 					PreparedStatement ps = con.prepareStatement("INSERT INTO productos values (?, ?, ?, ?)");
 					ps.setInt(1, cod);
@@ -331,13 +333,15 @@ public class Tienda {
 					int rowsInserted = ps.executeUpdate();
 					ps.close();
 					con.close();
+					JOptionPane.showMessageDialog(frmTienda, "Operacion realizada");
 					btnMostrar.doClick();
 				} catch (SQLException e) {
-					System.err.println(e.getMessage());
-					System.out.println("---------------------------------------------");
-					e.getErrorCode();
-					System.out.println("---------------------------------------------");
-					e.printStackTrace();
+					JOptionPane.showMessageDialog(frmTienda, "Operacion fallida " + e.getMessage(), null,
+							JOptionPane.ERROR_MESSAGE);
+
+				} catch (NumberFormatException e) {
+					JOptionPane.showMessageDialog(frmTienda, "Operacion fallida,formato invalido " + e.getMessage(),
+							null, JOptionPane.ERROR_MESSAGE);
 				}
 
 			}
@@ -358,13 +362,12 @@ public class Tienda {
 
 					dele_pstmt.close();
 					con.close();
+					JOptionPane.showMessageDialog(frmTienda, "Operacion realizada");
 					btnMostrar.doClick();
 				} catch (SQLException e) {
-					System.err.println(e.getMessage());
-					System.out.println("---------------------------------------------");
-					e.getErrorCode();
-					System.out.println("---------------------------------------------");
-					e.printStackTrace();
+					JOptionPane.showMessageDialog(frmTienda, "Operacion fallida " + e.getMessage(), null,
+							JOptionPane.ERROR_MESSAGE);
+
 				}
 
 			}
@@ -380,6 +383,10 @@ public class Tienda {
 					double precio = Double.valueOf(txtNuevoprecio.getText());
 					int cod = Integer.valueOf(comboBoxActualizar.getSelectedItem().toString());
 
+					if (precio < 0) {
+						throw new SQLException("Numeros negativos no validos");
+					}
+
 					PreparedStatement update_pstmt = con
 							.prepareStatement("UPDATE productos SET precio = ? WHERE codigo = ?");
 
@@ -390,14 +397,13 @@ public class Tienda {
 
 					update_pstmt.close();
 					con.close();
+					JOptionPane.showMessageDialog(frmTienda, "Operacion realizada");
 					btnMostrar.doClick();
 
 				} catch (SQLException e) {
-					System.err.println(e.getMessage());
-					System.out.println("---------------------------------------------");
-					e.getErrorCode();
-					System.out.println("---------------------------------------------");
-					e.printStackTrace();
+					JOptionPane.showMessageDialog(frmTienda, "Operacion fallida " + e.getMessage(), null,
+							JOptionPane.ERROR_MESSAGE);
+
 				}
 
 			}
@@ -413,6 +419,11 @@ public class Tienda {
 					int stock = Integer.valueOf(txtStock.getText());
 					int cod = Integer.valueOf(comboBoxActualizar.getSelectedItem().toString());
 					int ud = 0;
+
+					if (stock < 0) {
+						throw new SQLException("Numeros negativos no validos");
+					}
+
 					PreparedStatement ps = con.prepareStatement("SELECT unidades FROM productos WHERE codigo = ?");
 					ps.setInt(1, cod);
 					ResultSet rs = ps.executeQuery();
@@ -433,13 +444,15 @@ public class Tienda {
 
 					update_pstmt.close();
 					con.close();
+					JOptionPane.showMessageDialog(frmTienda, "Operacion realizada");
 					btnMostrar.doClick();
 				} catch (SQLException e) {
-					System.err.println(e.getMessage());
-					System.out.println("---------------------------------------------");
-					e.getErrorCode();
-					System.out.println("---------------------------------------------");
-					e.printStackTrace();
+					JOptionPane.showMessageDialog(frmTienda, "Operacion fallida " + e.getMessage(), null,
+							JOptionPane.ERROR_MESSAGE);
+
+				} catch (NumberFormatException e) {
+					JOptionPane.showMessageDialog(frmTienda, "Operacion fallida,formato invalido " + e.getMessage(),
+							null, JOptionPane.ERROR_MESSAGE);
 				}
 
 			}
@@ -456,6 +469,11 @@ public class Tienda {
 					int cod = Integer.valueOf(comboBoxVender.getSelectedItem().toString());
 					int ud = 0;
 					int precio = 0;
+
+					if (udVender < 0) {
+						throw new SQLException("Numeros negativos no validos");
+					}
+
 					PreparedStatement ps = con.prepareStatement("SELECT * FROM productos WHERE codigo = ?");
 					ps.setInt(1, cod);
 					ResultSet rs = ps.executeQuery();
@@ -491,7 +509,8 @@ public class Tienda {
 
 					btnMostrar.doClick();
 				} catch (SQLException e) {
-					JOptionPane.showMessageDialog(frmTienda, "Operacion fallida "+e.getMessage(), null, JOptionPane.ERROR_MESSAGE);
+					JOptionPane.showMessageDialog(frmTienda, "Operacion fallida " + e.getMessage(), null,
+							JOptionPane.ERROR_MESSAGE);
 
 				}
 
